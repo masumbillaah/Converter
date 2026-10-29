@@ -283,7 +283,6 @@
       border-color: var(--danger);
     }
 
-    /* Simple Toast */
     #toast {
       position: fixed;
       bottom: 24px;
@@ -317,14 +316,12 @@
     </header>
 
     <div class="card">
-      <!-- Only Essential Text Conversion Buttons -->
       <div class="tabs-bar">
         <div class="tabs-group">
           <button class="tab-btn" onclick="convertCase('sentence')"><span class="tag">Sc</span> Sentence case</button>
           <button class="tab-btn" onclick="convertCase('lower')"><span class="tag">lc</span> lower case</button>
           <button class="tab-btn" onclick="convertCase('upper')"><span class="tag">UC</span> UPPER CASE</button>
           <button class="tab-btn" onclick="convertCase('capitalized')"><span class="tag">Cc</span> Capitalized Case</button>
-          <button class="tab-btn" onclick="convertCase('title')"><span class="tag">Tc</span> Title Case</button>
           <button class="tab-btn" onclick="convertCase('trim')"><i class="fa-solid fa-broom"></i> Trim Spaces</button>
         </div>
 
@@ -334,10 +331,8 @@
         </div>
       </div>
 
-      <!-- Editor -->
       <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
 
-      <!-- Stats & Controls -->
       <div class="stats-bar">
         <div class="stats-items">
           <div>Characters: <span id="charCount">0</span></div>
@@ -410,7 +405,6 @@
       timer = setTimeout(() => saveHistory(textarea.value), 400);
     });
 
-    // The essential case conversions
     function convertCase(type) {
       let val = textarea.value;
       if (!val) return;
@@ -428,13 +422,6 @@
         case 'capitalized':
           val = val.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
           break;
-        case 'title':
-          const stops = ['a', 'an', 'and', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'with'];
-          val = val.toLowerCase().split(/(\s+)/).map((word, i) => {
-            if (stops.includes(word.toLowerCase()) && i !== 0) return word;
-            return word.charAt(0).toUpperCase() + word.slice(1);
-          }).join('');
-          break;
         case 'trim':
           val = val.replace(/[ \t]+/g, ' ').replace(/^\s+|\s+$/gm, '');
           break;
@@ -446,7 +433,6 @@
       showToast('Converted!');
     }
 
-    // Actions
     document.getElementById('copyBtn').onclick = () => {
       if (!textarea.value) return;
       navigator.clipboard.writeText(textarea.value);
@@ -488,7 +474,6 @@
       setTimeout(() => t.classList.remove('show'), 1800);
     }
 
-    // Theme Toggle
     document.getElementById('themeToggle').onclick = () => {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');

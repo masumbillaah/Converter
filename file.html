@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Case Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.9);
+      --bg-surface: rgba(255, 255, 255, 0.05);
+      --bg-surface-hover: rgba(255, 255, 255, 0.09);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-focus: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-light: rgba(59, 130, 246, 0.15);
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-surface: rgba(0, 0, 0, 0.04);
+      --bg-surface-hover: rgba(0, 0, 0, 0.07);
+      --border: rgba(0, 0, 0, 0.09);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #94a3b8;
+      --primary-light: rgba(59, 130, 246, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .theme-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .theme-btn:hover { background: var(--bg-surface-hover); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* Tabs Bar */
+    .tabs-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tabs-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .tab-btn:active {
+      transform: scale(0.97);
+    }
+
+    .tab-btn .tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    [data-theme="light"] .tab-btn .tag {
+      background: rgba(0, 0, 0, 0.07);
+    }
+
+    .history-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .history-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .history-btn:hover:not(:disabled) {
+      color: var(--text-main);
+      background: var(--bg-surface-hover);
+    }
+    .history-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* Textarea */
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      color: var(--text-main);
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    [data-theme="light"] textarea {
+      background: #fdfdfd;
+    }
+
+    textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* Footer Stats & Actions */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .stats-items {
+      display: flex;
+      gap: 16px;
+    }
+
+    .stats-items span {
+      font-weight: 700;
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .btn:hover { background: var(--bg-surface-hover); }
+
+    .btn.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn.primary:hover { background: var(--primary-hover); }
+
+    .btn.danger { color: var(--danger); }
+    .btn.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--danger);
+    }
+
+    /* Simple Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.25s ease;
+      pointer-events: none;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-font"></i></div>
+        <h1>Case Converter</h1>
+      </div>
+      <button class="theme-btn" id="themeToggle"><i class="fa-solid fa-moon"></i></button>
+    </header>
+
+    <div class="card">
+      <!-- Only Essential Text Conversion Buttons -->
+      <div class="tabs-bar">
+        <div class="tabs-group">
+          <button class="tab-btn" onclick="convertCase('sentence')"><span class="tag">Sc</span> Sentence case</button>
+          <button class="tab-btn" onclick="convertCase('lower')"><span class="tag">lc</span> lower case</button>
+          <button class="tab-btn" onclick="convertCase('upper')"><span class="tag">UC</span> UPPER CASE</button>
+          <button class="tab-btn" onclick="convertCase('capitalized')"><span class="tag">Cc</span> Capitalized Case</button>
+          <button class="tab-btn" onclick="convertCase('title')"><span class="tag">Tc</span> Title Case</button>
+          <button class="tab-btn" onclick="convertCase('trim')"><i class="fa-solid fa-broom"></i> Trim Spaces</button>
+        </div>
+
+        <div class="history-group">
+          <button id="undoBtn" class="history-btn" disabled title="Undo (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+          <button id="redoBtn" class="history-btn" disabled title="Redo (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+
+      <!-- Stats & Controls -->
+      <div class="stats-bar">
+        <div class="stats-items">
+          <div>Characters: <span id="charCount">0</span></div>
+          <div>Words: <span id="wordCount">0</span></div>
+          <div>Lines: <span id="lineCount">0</span></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="pasteBtn"><i class="fa-regular fa-clipboard"></i> Paste</button>
+          <button class="btn primary" id="copyBtn"><i class="fa-regular fa-copy"></i> Copy</button>
+          <button class="btn" id="downloadBtn"><i class="fa-solid fa-download"></i> Download</button>
+          <button class="btn danger" id="clearBtn"><i class="fa-regular fa-trash-can"></i> Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Copied!</div>
+
+  <script>
+    const textarea = document.getElementById('inputText');
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    let history = [''];
+    let historyIdx = 0;
+
+    function saveHistory(text) {
+      if (history[historyIdx] === text) return;
+      history = history.slice(0, historyIdx + 1);
+      history.push(text);
+      if (history.length > 50) history.shift();
+      else historyIdx++;
+      updateHistory();
+    }
+
+    function updateHistory() {
+      undoBtn.disabled = historyIdx <= 0;
+      redoBtn.disabled = historyIdx >= history.length - 1;
+    }
+
+    undoBtn.onclick = () => {
+      if (historyIdx > 0) {
+        historyIdx--;
+        textarea.value = history[historyIdx];
+        updateStats();
+        updateHistory();
+      }
+    };
+
+    redoBtn.onclick = () => {
+      if (historyIdx < history.length - 1) {
+        historyIdx++;
+        textarea.value = history[historyIdx];
+        updateStats();
+        updateHistory();
+      }
+    };
+
+    function updateStats() {
+      const val = textarea.value;
+      document.getElementById('charCount').textContent = val.length;
+      document.getElementById('wordCount').textContent = val.trim() ? val.trim().split(/\s+/).length : 0;
+      document.getElementById('lineCount').textContent = val ? val.split(/\r\n|\r|\n/).length : 0;
+    }
+
+    let timer;
+    textarea.addEventListener('input', () => {
+      updateStats();
+      clearTimeout(timer);
+      timer = setTimeout(() => saveHistory(textarea.value), 400);
+    });
+
+    // The essential case conversions
+    function convertCase(type) {
+      let val = textarea.value;
+      if (!val) return;
+
+      switch(type) {
+        case 'upper':
+          val = val.toUpperCase();
+          break;
+        case 'lower':
+          val = val.toLowerCase();
+          break;
+        case 'sentence':
+          val = val.toLowerCase().replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+          break;
+        case 'capitalized':
+          val = val.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+          break;
+        case 'title':
+          const stops = ['a', 'an', 'and', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'with'];
+          val = val.toLowerCase().split(/(\s+)/).map((word, i) => {
+            if (stops.includes(word.toLowerCase()) && i !== 0) return word;
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          }).join('');
+          break;
+        case 'trim':
+          val = val.replace(/[ \t]+/g, ' ').replace(/^\s+|\s+$/gm, '');
+          break;
+      }
+
+      textarea.value = val;
+      saveHistory(val);
+      updateStats();
+      showToast('Converted!');
+    }
+
+    // Actions
+    document.getElementById('copyBtn').onclick = () => {
+      if (!textarea.value) return;
+      navigator.clipboard.writeText(textarea.value);
+      showToast('Copied to Clipboard!');
+    };
+
+    document.getElementById('pasteBtn').onclick = async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        textarea.value = text;
+        saveHistory(text);
+        updateStats();
+        showToast('Pasted!');
+      } catch (e) {
+        showToast('Paste manually (Ctrl+V)');
+      }
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      if (!textarea.value) return;
+      textarea.value = '';
+      saveHistory('');
+      updateStats();
+    };
+
+    document.getElementById('downloadBtn').onclick = () => {
+      if (!textarea.value) return;
+      const blob = new Blob([textarea.value], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'converted-text.txt';
+      a.click();
+    };
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    // Theme Toggle
+    document.getElementById('themeToggle').onclick = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      document.getElementById('themeToggle').innerHTML = isLight ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+    };
+  </script>
+</body>
+</html>
